@@ -1,178 +1,176 @@
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:ffi';
 
+var type = ("");
+String resault() {
+  String temp = "/*-+%";
+
+  List<int> ind = [];
+  List<num> numbers = [];
+  for (int i = 0; i < type.length; i++) {
+    if (temp.contains(type[i])) {
+      ind.add(i);
+    }
+  }
+  int q = 0;
+  for (int i in ind) {
+    numbers.add(num.parse(type.substring(q, i)));
+    q = i + 1;
+  }
+  numbers.add(num.parse(type.substring(q, type.length)));
+  for (int i = 0; i < temp.length; i++) {
+    for (int j = 0; j < ind.length; j++) {
+      if (temp[i] == type[ind[j]]) {
+        if (temp[i] == "+") {
+          numbers[j] = numbers[j] + numbers[j + 1];
+        }
+        if (temp[i] == "-") {
+          numbers[j] = numbers[j] - numbers[j + 1];
+        }
+        if (temp[i] == "*") {
+          numbers[j] = numbers[j] * numbers[j + 1];
+        }
+        if (temp[i] == "/") {
+          numbers[j] = numbers[j] / numbers[j + 1];
+        }
+        numbers.removeAt(j + 1);
+        ind.removeAt(j);
+        j--;
+      }
+    }
+  }
+  type = numbers[0].toString();
+  return type;
+}
 void main() {
   runApp(MyApp());
 }
-
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
-
   @override
   State<MyApp> createState() => _MyAppState();
 }
-
 class _MyAppState extends State<MyApp> {
-  int i = 0;
-  bool piyoz = false;
-  bool karam = false;
-  bool garmdori = false;
-  int sum = 0;
-  List<int> cost = [0, 20000, 30000, 40000];
   @override
+  num multlipline = 1;
+  num doo = 1;
+  Widget buttons(String buttonName) {
+    return Container(
+      child: ElevatedButton(
+          onPressed: () {
+            setState(() {
+              type += buttonName;
+  //              String ans = "/*-+%";
+  // for (int i = 0; i < type.length; i++) {
+  //   for (int a = 0; a < ans.length; a++) {
+  //     if (type[i] == ans[a]) {
+  //       for (int y = 0; y < ans.length; y++) {
+  //         if (type[i + 1] == ans[y]) {
+  //           type = type.substring(0, i) + type.substring(i+1, type.length);
+  //           print(type);
+  //           }
+  //         }
+  //       }
+  //     }
+  //  }
+});},
+          child: Text(buttonName)),
+    );
+  }
+
+  String neww = "";
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: Container(
-          margin: EdgeInsets.only(left: 100),
+          padding: EdgeInsets.all(50),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                margin: EdgeInsets.only(right: 100),
-                child: Image.network(
-                    "https://static.tildacdn.com/tild3964-3164-4163-b465-613334373931/DTxNmydUQAE6yI7.jpg"),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    RadioListTile(
-                      title: Text(
-                        "Easy",
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                      value: 1,
-                      groupValue: i,
-                      onChanged: (value) {
-                        setState(() {
-                          sum -= cost[i];
-                          i = value!;
-                          sum += cost[i];
-                        });
-                      },
-                    ),
-                    RadioListTile(
-                      title: Text(
-                        "Normal",
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                      value: 2,
-                      groupValue: i,
-                      onChanged: (value) {
-                        setState(() {
-                          sum -= cost[i];
-                          i = value!;
-                          sum += cost[i];
-                        });
-                      },
-                    ),
-                    RadioListTile(
-                      title: Text(
-                        "Big",
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                      value: 3,
-                      groupValue: i,
-                      onChanged: (value) {
-                        setState(() {
-                          sum -= cost[i];
-                          i = value!;
-                          sum += cost[i];
-                        });
-                      },
-                    ),
-                  ],
+                margin: EdgeInsets.only(bottom: 30),
+                child: TextField(
+                  keyboardType: TextInputType.none,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(), hintText: type),
                 ),
               ),
               Container(
                 child: Column(
                   children: [
-                    Container(
-                      child: Row(
-                        children: [
-                          Checkbox(
-                              value: piyoz,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  if (value == false) {
-                                    sum -= 10000;
-                                  } else {
-                                    sum += 10000;
-                                  }
-                                  piyoz = value!;
-                                });
-                              }),
-                          Text(
-                            "Piyozli",
-                            style: TextStyle(color: Colors.blue),
-                          )
-                        ],
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                doo = double.parse(type);
+                                type = (doo * doo).toString();
+                              });
+                            },
+                            child: Text("x2")),
+                        buttons("%"),
+                        ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                neww = type.substring(0, type.length - 1);
+                                type = neww;
+                              });
+                            },
+                            child: Text("C")),
+                        ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                type = "";
+                              });
+                            },
+                            child: Text("clear"))
+                      ],
                     ),
-                    Container(
-                      child: Row(
-                        children: [
-                          Checkbox(
-                              value: karam,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  if (value == false) {
-                                    sum -= 15000;
-                                  }
-
-else {
-                                    sum += 15000;
-                                  }
-
-                                  karam = value!;
-                                });
-                              }),
-                          Text(
-                            "karamli",
-                            style: TextStyle(color: Colors.blue),
-                          )
-                        ],
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        buttons("1"),
+                        buttons("2"),
+                        buttons("3"),
+                        buttons("+")
+                      ],
                     ),
-                    Container(
-                      child: Row(
-                        children: [
-                          Checkbox(
-                              value: garmdori,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  if (value == false) {
-                                    sum -= 17000;
-                                  } else {
-                                    sum += 17000;
-                                  }
-
-                                  garmdori = value!;
-                                });
-                              }),
-                          Text(
-                            "garmdorili",
-                            style: TextStyle(color: Colors.blue),
-                          )
-                        ],
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        buttons("4"),
+                        buttons("5"),
+                        buttons("6"),
+                        buttons("-"),
+                      ],
                     ),
-                    Container(
-                      padding: EdgeInsets.only(right: 80),
-                      child: Column(
-                        children: [
-                          Text(
-                            "Sizning buyutrmangiz narxi:",
-                            style: TextStyle(fontSize: 20, color: Colors.red),
-                          ),
-                          Text(
-                            "${sum}",
-                            style: TextStyle(fontSize: 40, color: Colors.red),
-                          )
-                        ],
-                      ),
-                    )
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        buttons("7"),
+                        buttons("8"),
+                        buttons("9"),
+                        buttons("*"),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        buttons("."),
+                        buttons("0"),
+                        ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                resault();
+                              });
+                            },
+                            child: Text("=")),
+                        buttons("/")
+                      ],
+                    ),
                   ],
                 ),
               )
